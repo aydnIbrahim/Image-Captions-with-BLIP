@@ -1,3 +1,9 @@
+"""
+Image Captioning Web App
+
+This script uses a trained model (BLIP) to generate captions for images using Gradio.
+"""
+
 import gradio as gr
 import numpy as np
 from PIL import Image
@@ -10,6 +16,15 @@ print("Done.")
 
 
 def caption_image(input_image: np.ndarray):
+    """
+    Generate a caption for the input image.
+
+    Parameters:
+    input_image (np.ndarray): Input image as a NumPy array.
+
+    Returns:
+    tuple: A tuple containing a static string "The image caption is: " and the generated caption.
+    """
     # Load image and convert to RGB
     image = Image.fromarray(input_image).convert('RGB')
 
@@ -17,9 +32,7 @@ def caption_image(input_image: np.ndarray):
     text = 'the image of'
     inputs = processor(images=image, text=text, return_tensors="pt")
 
-    # The two asterisks (**) in Python are used in function calls to unpack dictionaries and pass items in the
-    # dictionary as keyword arguments to the function. **inputs is unpacking the inputs dictionary and passing its
-    # items as arguments to the model. Generate a caption for the image
+    # Generate a caption for the image
     outputs = model.generate(**inputs, max_length=50)  # A sequence of tokens
 
     # Decode the generated tokens (outputs) to human-readable text
@@ -32,5 +45,6 @@ gr.Interface(
     inputs=gr.Image(),
     outputs="text",
     title="Image Captioning",
-    description="This is a simple web app for generating captions for image using a trained model (BLIP)."
+    description="This is a simple web app for generating captions "
+                "for images using a trained model (BLIP)."
 ).launch()
